@@ -1,11 +1,11 @@
 using API.Common.Exceptions.Handler;
-using API.Common.Models;
 using API.Data;
-using API.Data.Repositories.Implementations;
-using API.Data.Repositories.Interfaces;
 using API.Extensions;
+using API.Hubs;
+using API.Services.Implementations;
+using API.Services.Interfaces;
 using Carter;
-using Microsoft.EntityFrameworkCore;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,31 +14,39 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCarter();
 
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration.GetConnectionString("Database"));
-});
-builder.Services.AddScoped<IProfilesRepository, ProfilesRepository>();
-builder.Services.AddScoped<IUnitOfWork>(serviceProvider =>
-    serviceProvider.GetRequiredService<ApplicationDbContext>());
-
 builder.Services.AddMediatR(serviceConfiguration =>
 {
     serviceConfiguration.RegisterServicesFromAssembly(typeof(Program).Assembly);
 });
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
 
-builder.Services.AddIdentity(builder.Configuration);
-builder.Services.AddScoped<ISportsRepository, SportsRepository>();
+builder
+    .AddIdentity()
+    .AddDatabase();
+
+builder.Services.Configure<BlobStorageSettings>(builder.Configuration.GetSection("BlobStorage"));
+builder.Services.AddScoped<IBlobStorageService, BlobStorageService>();
+
+builder.Services.AddScoped<IBuddyService, BuddyService>();
+builder.Services.AddScoped<IMatchService, MatchService>();
+builder.Services.AddScoped<IConversationService, ConversationService>();
+builder.Services.AddScoped<IProfilePhotoService, ProfilePhotoService>();
+
+
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
 app.MapCarter();
+
+app.InitializeDatabaseAsync();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 app.MapIdentityApi();
+app.MapHub<ChatHub>("chatHub");
 
 app.Run();

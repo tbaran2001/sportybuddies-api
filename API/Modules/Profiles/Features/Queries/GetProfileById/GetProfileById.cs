@@ -2,6 +2,7 @@
 using API.Data.Repositories.Interfaces;
 using API.Modules.Profiles.Dtos;
 using API.Modules.Profiles.Exceptions;
+using API.Services.Interfaces;
 using Ardalis.GuardClauses;
 using Carter;
 using FluentValidation;
@@ -26,7 +27,9 @@ public class GetProfileByIdEndpoint : ICarterModule
 
                 var result = await sender.Send(query);
 
-                return Results.Ok(new GetProfileByIdResponseDto(result.Profile));
+                var response = result.Profile.Adapt<GetProfileByIdResponseDto>();
+
+                return Results.Ok(response);
             })
             .RequireAuthorization()
             .WithTags("Profiles")
@@ -46,7 +49,9 @@ public class GetProfileByIdQueryValidator : AbstractValidator<GetProfileByIdQuer
     }
 }
 
-internal class GetProfileByIdQueryHandler(IProfilesRepository profilesRepository)
+internal class GetProfileByIdQueryHandler(
+    IProfilesRepository profilesRepository,
+    IBlobStorageService blobStorageService)
     : IQueryHandler<GetProfileByIdQuery, GetProfileByIdResult>
 {
     public async Task<GetProfileByIdResult> Handle(GetProfileByIdQuery query, CancellationToken cancellationToken)
@@ -56,6 +61,9 @@ internal class GetProfileByIdQueryHandler(IProfilesRepository profilesRepository
         var profile = await profilesRepository.GetProfileByIdWithSportsAsync(query.Id);
         if (profile == null)
             throw new ProfileNotFoundException(query.Id);
+
+        var mainPhotoSasUrl = blobStorageService.GetBlobSasUrl(profile.MainPhotoUrl);
+        profile.SetMainPhotoUrl(mainPhotoSasUrl);
 
         var profileDto = profile.Adapt<ProfileDto>();
 

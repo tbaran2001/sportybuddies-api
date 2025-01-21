@@ -8,6 +8,7 @@ public record ProfileDto(
     Guid Id,
     string Name,
     string Description,
+    string MainPhotoUrl,
     DateTime CreatedOnUtc,
     Gender Gender,
     DateOnly DateOfBirth,

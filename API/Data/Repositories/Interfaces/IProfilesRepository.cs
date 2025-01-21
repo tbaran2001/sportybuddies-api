@@ -9,5 +9,5 @@ public interface IProfilesRepository
     Task<IEnumerable<Profile>> GetAllProfilesAsync();
     Task AddProfileAsync(Profile profile);
     void RemoveProfile(Profile profile);
-    Task<IEnumerable<Guid>> GetPotentialMatchesAsync(Guid profileId, IEnumerable<Guid> profileSports);
+    Task<IEnumerable<Profile>> GetPotentialMatchesAsync(Guid profileId, IEnumerable<Guid> profileSports);
 }

@@ -35,7 +35,7 @@ public class ProfilesRepository(ApplicationDbContext dbContext) : IProfilesRepos
         dbContext.Profiles.Remove(profile);
     }
 
-    public async Task<IEnumerable<Guid>> GetPotentialMatchesAsync(Guid profileId, IEnumerable<Guid> profileSports)
+    public async Task<IEnumerable<Profile>> GetPotentialMatchesAsync(Guid profileId, IEnumerable<Guid> profileSports)
     {
         return await dbContext.Profiles
             .Where(p => p.Id != profileId)
@@ -43,7 +43,6 @@ public class ProfilesRepository(ApplicationDbContext dbContext) : IProfilesRepos
             .Where(p => !dbContext.Matches.Any(m =>
                 (m.ProfileId == profileId && m.MatchedProfileId == p.Id) ||
                 (m.ProfileId == p.Id && m.MatchedProfileId == profileId)))
-            .Select(p => p.Id)
             .ToListAsync();
     }
 }

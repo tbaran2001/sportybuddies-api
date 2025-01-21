@@ -77,7 +77,6 @@ internal class UpdateProfileCommandHandler(
             throw new ProfileNotFoundException(currentUserId);
 
         profile.Update(command.Name, command.Description, command.DateOfBirth, command.Gender);
-
         await unitOfWork.CommitChangesAsync();
 
         return new UpdateProfileResult(profile.Id);

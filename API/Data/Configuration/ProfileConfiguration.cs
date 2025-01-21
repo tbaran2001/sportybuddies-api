@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace API.Data.Configuration;
 
-public class ProfileConfiguration:IEntityTypeConfiguration<Profile>
+public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
 {
     public void Configure(EntityTypeBuilder<Profile> builder)
     {
@@ -24,10 +24,6 @@ public class ProfileConfiguration:IEntityTypeConfiguration<Profile>
                     .WithMany()
                     .HasForeignKey("ProfileId")
             );
-
-        builder
-            .Property(up => up.Id)
-            .ValueGeneratedNever();
 
         builder.OwnsOne(p => p.Preferences, preferencesBuilder =>
         {

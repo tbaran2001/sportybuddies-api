@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250121143015_Initial")]
+    [Migration("20250121173746_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -24,6 +24,108 @@ namespace API.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("API.Modules.Buddies.Models.Buddy", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("MatchedProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OppositeBuddyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("MatchedProfileId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Buddies");
+                });
+
+            modelBuilder.Entity("API.Modules.Conversations.Models.Conversation", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("CreatorId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatorId");
+
+                    b.ToTable("Conversations");
+                });
+
+            modelBuilder.Entity("API.Modules.Conversations.Models.Message", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Content")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("SenderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("API.Modules.Conversations.Models.Participant", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("ConversationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("datetime2");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConversationId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("Participants");
+                });
 
             modelBuilder.Entity("API.Modules.Identity.ApplicationUser", b =>
                 {
@@ -118,7 +220,7 @@ namespace API.Data.Migrations
                     b.Property<Guid>("ProfileId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int>("Swipe")
+                    b.Property<int?>("Swipe")
                         .HasColumnType("int");
 
                     b.Property<DateTime?>("SwipeDateTime")
@@ -126,12 +228,17 @@ namespace API.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MatchedProfileId");
+
+                    b.HasIndex("ProfileId");
+
                     b.ToTable("Matches");
                 });
 
             modelBuilder.Entity("API.Modules.Profiles.Models.Profile", b =>
                 {
                     b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
@@ -320,6 +427,101 @@ namespace API.Data.Migrations
                     b.ToTable("ProfileSports");
                 });
 
+            modelBuilder.Entity("API.Modules.Buddies.Models.Buddy", b =>
+                {
+                    b.HasOne("API.Modules.Conversations.Models.Conversation", "Conversation")
+                        .WithMany()
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Modules.Profiles.Models.Profile", "MatchedProfile")
+                        .WithMany()
+                        .HasForeignKey("MatchedProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("API.Modules.Profiles.Models.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("MatchedProfile");
+
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("API.Modules.Conversations.Models.Conversation", b =>
+                {
+                    b.HasOne("API.Modules.Profiles.Models.Profile", "Creator")
+                        .WithMany()
+                        .HasForeignKey("CreatorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Creator");
+                });
+
+            modelBuilder.Entity("API.Modules.Conversations.Models.Message", b =>
+                {
+                    b.HasOne("API.Modules.Conversations.Models.Conversation", "Conversation")
+                        .WithMany("Messages")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Modules.Profiles.Models.Profile", "Sender")
+                        .WithMany()
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("API.Modules.Conversations.Models.Participant", b =>
+                {
+                    b.HasOne("API.Modules.Conversations.Models.Conversation", "Conversation")
+                        .WithMany("Participants")
+                        .HasForeignKey("ConversationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("API.Modules.Profiles.Models.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Conversation");
+
+                    b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("API.Modules.Matches.Models.Match", b =>
+                {
+                    b.HasOne("API.Modules.Profiles.Models.Profile", "MatchedProfile")
+                        .WithMany()
+                        .HasForeignKey("MatchedProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("API.Modules.Profiles.Models.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("MatchedProfile");
+
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("API.Modules.Profiles.Models.Profile", b =>
                 {
                     b.OwnsOne("API.Modules.Profiles.ValueObjects.Location", "Location", b1 =>
@@ -436,6 +638,13 @@ namespace API.Data.Migrations
                         .HasForeignKey("SportId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("API.Modules.Conversations.Models.Conversation", b =>
+                {
+                    b.Navigation("Messages");
+
+                    b.Navigation("Participants");
                 });
 #pragma warning restore 612, 618
         }

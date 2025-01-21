@@ -1,4 +1,6 @@
 ﻿using API.Common.Models;
+using API.Modules.Buddies.Models;
+using API.Modules.Conversations.Models;
 using API.Modules.Identity;
 using API.Modules.Matches.Models;
 using API.Modules.Profiles.Models;
@@ -15,6 +17,10 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<Sport> Sports { get; set; }
     public DbSet<Match> Matches { get; set; }
+    public DbSet<Buddy> Buddies { get; set; }
+    public DbSet<Conversation> Conversations { get; set; }
+    public DbSet<Participant> Participants { get; set; }
+    public DbSet<Message> Messages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -81,7 +81,22 @@ public class Profile : Entity
         Preferences = preferences;
     }
 
+    public void UpdateLocation(Location location)
+    {
+        Location = location;
+    }
+
     public void AddMainPhoto(string url)
+    {
+        MainPhotoUrl = url;
+    }
+
+    public void RemoveMainPhoto()
+    {
+        MainPhotoUrl = null;
+    }
+
+    public void SetMainPhotoUrl(string url)
     {
         MainPhotoUrl = url;
     }

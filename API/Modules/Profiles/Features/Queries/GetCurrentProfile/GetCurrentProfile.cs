@@ -1,9 +1,9 @@
-﻿using System.Security.Claims;
-using API.Common.CQRS;
+﻿using API.Common.CQRS;
 using API.Common.Web;
 using API.Data.Repositories.Interfaces;
 using API.Modules.Profiles.Dtos;
 using API.Modules.Profiles.Exceptions;
+using API.Services.Interfaces;
 using Ardalis.GuardClauses;
 using Carter;
 using Mapster;
@@ -43,7 +43,8 @@ public class GetCurrentProfileEndpoint : ICarterModule
 
 internal class GetCurrentProfileQueryHandler(
     IProfilesRepository profilesRepository,
-    ICurrentUserProvider currentUserProvider) : IQueryHandler<GetCurrentProfileQuery, GetCurrentProfileResult>
+    ICurrentUserProvider currentUserProvider,
+    IBlobStorageService blobStorageService) : IQueryHandler<GetCurrentProfileQuery, GetCurrentProfileResult>
 {
     public async Task<GetCurrentProfileResult> Handle(GetCurrentProfileQuery query, CancellationToken cancellationToken)
     {
@@ -54,6 +55,9 @@ internal class GetCurrentProfileQueryHandler(
         var profile = await profilesRepository.GetProfileByIdWithSportsAsync(currentUserId);
         if (profile == null)
             throw new ProfileNotFoundException(currentUserId);
+
+        var mainPhotoSasUrl = blobStorageService.GetBlobSasUrl(profile.MainPhotoUrl);
+        profile.SetMainPhotoUrl(mainPhotoSasUrl);
 
         var profileDto = profile.Adapt<ProfileDto>();
 

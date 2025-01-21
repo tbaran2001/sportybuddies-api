@@ -2,6 +2,7 @@
 using API.Common.Models;
 using API.Data.Repositories.Interfaces;
 using API.Modules.Sports.Exceptions;
+using API.Modules.Sports.Models;
 using Ardalis.GuardClauses;
 using Carter;
 using FluentValidation;
@@ -24,11 +25,11 @@ public class CreateSportEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/sports", async (CreateSportRequestDto request, IMediator mediator) =>
+        app.MapPost("api/sports", async (CreateSportRequestDto request, ISender sender) =>
             {
                 var command = request.Adapt<CreateSportCommand>();
 
-                var result = await mediator.Send(command);
+                var result = await sender.Send(command);
 
                 var response = result.Adapt<CreateSportResponseDto>();
 
@@ -63,7 +64,7 @@ internal class CreateSportCommandHandler(ISportsRepository sportsRepository)
         if (await sportsRepository.SportNameExistsAsync(command.Name))
             throw new SportAlreadyExistException(command.Name);
 
-        var sportEntity = Models.Sport.Create(command.Name, command.Description);
+        var sportEntity = Sport.Create(command.Name, command.Description);
 
         await sportsRepository.AddSportAsync(sportEntity);
 
