@@ -1,12 +1,16 @@
 ﻿using API.Common.Models;
+using API.Modules.Identity;
 using API.Modules.Matches.Models;
 using API.Modules.Profiles.Models;
 using API.Modules.Sports.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Data;
 
-public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options), IUnitOfWork
+public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options), IUnitOfWork
 {
     public DbSet<Profile> Profiles { get; set; }
     public DbSet<Sport> Sports { get; set; }

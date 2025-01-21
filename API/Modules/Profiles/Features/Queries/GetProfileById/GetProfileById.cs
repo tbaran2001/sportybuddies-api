@@ -20,7 +20,7 @@ public class GetProfileByIdEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("profiles/{id:guid}", async (Guid id, ISender sender) =>
+        app.MapGet("api/profiles/{id:guid}", async (Guid id, ISender sender) =>
             {
                 var query = new GetProfileByIdQuery(id);
 
@@ -29,6 +29,7 @@ public class GetProfileByIdEndpoint : ICarterModule
                 return Results.Ok(new GetProfileByIdResponseDto(result.Profile));
             })
             .RequireAuthorization()
+            .WithTags("Profiles")
             .WithName("GetProfileById")
             .Produces<GetProfileByIdResponseDto>()
             .ProducesProblem(StatusCodes.Status404NotFound)

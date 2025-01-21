@@ -25,7 +25,7 @@ public class UpdateProfileEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPut("profiles/me", async (UpdateProfileRequestDto request, ISender sender) =>
+        app.MapPut("api/profiles/me", async (UpdateProfileRequestDto request, ISender sender) =>
             {
                 var command = request.Adapt<UpdateProfileCommand>();
 
@@ -34,6 +34,7 @@ public class UpdateProfileEndpoint : ICarterModule
                 return Results.NoContent();
             })
             .RequireAuthorization()
+            .WithTags("Profiles")
             .WithName("UpdateProfile")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest)

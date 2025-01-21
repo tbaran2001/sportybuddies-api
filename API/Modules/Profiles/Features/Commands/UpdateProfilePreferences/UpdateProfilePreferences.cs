@@ -22,7 +22,7 @@ public class UpdateProfilePreferencesEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPut("profiles/preferences", async (UpdateProfilePreferencesRequestDto request, ISender sender) =>
+        app.MapPut("api/profiles/preferences", async (UpdateProfilePreferencesRequestDto request, ISender sender) =>
             {
                 var command = request.Adapt<UpdateProfilePreferencesCommand>();
 
@@ -31,6 +31,7 @@ public class UpdateProfilePreferencesEndpoint : ICarterModule
                 return Results.NoContent();
             })
             .RequireAuthorization()
+            .WithTags("Profiles")
             .WithName("UpdateProfilePreferences")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest)

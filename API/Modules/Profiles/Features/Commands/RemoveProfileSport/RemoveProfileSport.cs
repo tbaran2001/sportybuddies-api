@@ -19,7 +19,7 @@ public class RemoveProfileSportEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapDelete("profiles/sports/{sportId:guid}", async (Guid sportId, ISender sender) =>
+        app.MapDelete("api/profiles/sports/{sportId:guid}", async (Guid sportId, ISender sender) =>
             {
                 var command = new RemoveProfileSportCommand(sportId);
 
@@ -28,6 +28,7 @@ public class RemoveProfileSportEndpoint : ICarterModule
                 return Results.NoContent();
             })
             .RequireAuthorization()
+            .WithTags("Profiles")
             .WithName("RemoveProfileSport")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest)

@@ -21,14 +21,7 @@ public class GetCurrentProfileEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("test", (IHttpContextAccessor context) =>
-        {
-            var id = context?.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            return Results.Content(id);
-        });
-
-        app.MapGet("profiles/me", async (ISender sender) =>
+        app.MapGet("api/profiles/me", async (ISender sender) =>
             {
                 var query = new GetCurrentProfileQuery();
 
@@ -39,6 +32,7 @@ public class GetCurrentProfileEndpoint : ICarterModule
                 return Results.Ok(response);
             })
             .RequireAuthorization()
+            .WithTags("Profiles")
             .WithName("GetCurrentProfile")
             .Produces<GetCurrentProfileResponseDto>()
             .ProducesProblem(StatusCodes.Status400BadRequest)

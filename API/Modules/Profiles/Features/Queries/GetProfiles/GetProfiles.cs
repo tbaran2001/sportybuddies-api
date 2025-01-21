@@ -18,7 +18,7 @@ public class GetProfileEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapGet("profiles", async (ISender sender) =>
+        app.MapGet("api/profiles", async (ISender sender) =>
             {
                 var query = new GetProfilesQuery();
 
@@ -28,6 +28,7 @@ public class GetProfileEndpoint : ICarterModule
 
                 return Results.Ok(response);
             })
+            .WithTags("Profiles")
             .WithName("GetProfiles")
             .Produces<GetProfilesResponseDto>()
             .ProducesProblem(StatusCodes.Status400BadRequest)

@@ -19,7 +19,7 @@ public class AddProfileSportEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("profiles/sports/{sportId:guid}", async (Guid sportId, ISender sender) =>
+        app.MapPost("api/profiles/sports/{sportId:guid}", async (Guid sportId, ISender sender) =>
             {
                 var command = new AddProfileSportCommand(sportId);
 
@@ -28,6 +28,7 @@ public class AddProfileSportEndpoint : ICarterModule
                 return Results.NoContent();
             })
             .RequireAuthorization()
+            .WithTags("Profiles")
             .WithName("AddProfileSport")
             .Produces(StatusCodes.Status204NoContent)
             .ProducesProblem(StatusCodes.Status400BadRequest)

@@ -1,32 +1,33 @@
 ﻿using API.Data.Repositories.Interfaces;
 using API.Modules.Sports.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace API.Data.Repositories.Implementations;
 
-public class SportsRepository:ISportsRepository
+public class SportsRepository(ApplicationDbContext dbContext) : ISportsRepository
 {
     public async Task<IEnumerable<Sport>> GetAllSportsAsync()
     {
-        throw new NotImplementedException();
+        return await dbContext.Sports.ToListAsync();
     }
 
     public async Task<Sport> GetSportByIdAsync(Guid sportId)
     {
-        throw new NotImplementedException();
+        return await dbContext.Sports.FindAsync(sportId);
     }
 
     public async Task AddSportAsync(Sport sport)
     {
-        throw new NotImplementedException();
+        await dbContext.Sports.AddAsync(sport);
     }
 
     public void RemoveSport(Sport sport)
     {
-        throw new NotImplementedException();
+        dbContext.Sports.Remove(sport);
     }
 
     public async Task<bool> SportNameExistsAsync(string sportName)
     {
-        throw new NotImplementedException();
+        return await dbContext.Sports.AnyAsync(s => s.Name == sportName);
     }
 }
