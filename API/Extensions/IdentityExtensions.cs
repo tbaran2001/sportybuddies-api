@@ -7,18 +7,18 @@ namespace API.Extensions;
 
 public static class IdentityExtensions
 {
-    public static IServiceCollection AddIdentity(this IServiceCollection services, IConfiguration configuration)
+    public static WebApplicationBuilder AddIdentity(this WebApplicationBuilder builder)
     {
-        services.ConfigureApplicationCookie(options =>
+        builder.Services.ConfigureApplicationCookie(options =>
         {
             options.Cookie.HttpOnly = false;
             options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             options.Cookie.SameSite = SameSiteMode.None;
         });
 
-        services.AddAuthorizationBuilder();
+        builder.Services.AddAuthorizationBuilder();
 
-        services.AddIdentityApiEndpoints<ApplicationUser>(options =>
+        builder.Services.AddIdentityApiEndpoints<ApplicationUser>(options =>
             {
                 options.Password.RequireDigit = false;
                 options.Password.RequireLowercase = false;
@@ -29,11 +29,13 @@ public static class IdentityExtensions
             .AddRoles<IdentityRole<Guid>>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
-        services.AddScoped<UserManager<ApplicationUser>, CustomUserManager>();
-        services.AddScoped<IdentityEventsHandler>();
-        services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
+        builder.Services.AddScoped<UserManager<ApplicationUser>, CustomUserManager>();
+        builder.Services.AddScoped<IdentityEventsHandler>();
+        builder.Services.AddScoped<ICurrentUserProvider, CurrentUserProvider>();
 
-        return services;
+        builder.Services.AddHttpContextAccessor();
+
+        return builder;
     }
 
     public static IEndpointRouteBuilder MapIdentityApi(this IEndpointRouteBuilder endpoints)
