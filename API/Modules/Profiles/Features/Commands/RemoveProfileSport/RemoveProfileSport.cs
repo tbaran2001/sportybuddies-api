@@ -7,13 +7,14 @@ using API.Modules.Sports.Exceptions;
 using Ardalis.GuardClauses;
 using Carter;
 using FluentValidation;
+using MassTransit;
 using MediatR;
 
 namespace API.Modules.Profiles.Features.Commands.RemoveProfileSport;
 
 public record RemoveProfileSportCommand(Guid SportId) : ICommand;
 
-public record ProfileSportRemovedDomainEvent(Guid ProfileId, IEnumerable<Guid> SportIds) : IDomainEvent;
+public record ProfileSportRemovedEvent(Guid ProfileId);
 
 public class RemoveProfileSportEndpoint : ICarterModule
 {
@@ -49,7 +50,8 @@ internal class RemoveProfileSportCommandHandler(
     IProfilesRepository profilesRepository,
     ISportsRepository sportsRepository,
     ICurrentUserProvider currentUserProvider,
-    IUnitOfWork unitOfWork) : ICommandHandler<RemoveProfileSportCommand>
+    IUnitOfWork unitOfWork,
+    IPublishEndpoint publishEndpoint) : ICommandHandler<RemoveProfileSportCommand>
 {
     public async Task<Unit> Handle(RemoveProfileSportCommand command, CancellationToken cancellationToken)
     {
@@ -67,6 +69,10 @@ internal class RemoveProfileSportCommandHandler(
 
         profile.RemoveSport(sport);
         await unitOfWork.CommitChangesAsync();
+
+        await publishEndpoint.Publish(
+            new ProfileSportRemovedEvent(profile.Id),
+            cancellationToken);
 
         return Unit.Value;
     }

@@ -10,7 +10,7 @@ public class Buddy : Entity
     public Guid ProfileId { get; private set; }
     public Guid MatchedProfileId { get; private set; }
     public DateTime CreatedOn { get; private set; }
-    public Guid ConversationId { get; private set; }
+    public Guid? ConversationId { get; private set; }
 
     public Profile Profile { get; private set; }
     public Profile MatchedProfile { private set; get; }
@@ -23,14 +23,14 @@ public class Buddy : Entity
             Id = Guid.NewGuid(),
             ProfileId = profileId,
             MatchedProfileId = matchedProfileId,
-            CreatedOn = createdOn
+            CreatedOn = createdOn,
         };
         var buddy2 = new Buddy
         {
             Id = Guid.NewGuid(),
             ProfileId = matchedProfileId,
             MatchedProfileId = profileId,
-            CreatedOn = createdOn
+            CreatedOn = createdOn,
         };
 
         buddy1.OppositeBuddyId = buddy2.Id;

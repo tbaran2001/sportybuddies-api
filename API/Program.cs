@@ -6,6 +6,7 @@ using API.Services.Implementations;
 using API.Services.Interfaces;
 using Carter;
 using FluentValidation;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,12 @@ builder.Services.AddScoped<IMatchService, MatchService>();
 builder.Services.AddScoped<IConversationService, ConversationService>();
 builder.Services.AddScoped<IProfilePhotoService, ProfilePhotoService>();
 
+builder.Services.AddMassTransit(configuration =>
+{
+    configuration.SetKebabCaseEndpointNameFormatter();
+    configuration.AddConsumers(typeof(Program).Assembly);
+    configuration.UsingInMemory((context, config) => config.ConfigureEndpoints(context));
+});
 
 builder.Services.AddSignalR();
 

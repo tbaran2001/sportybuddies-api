@@ -7,6 +7,7 @@ using API.Services.Interfaces;
 using Ardalis.GuardClauses;
 using Carter;
 using FluentValidation;
+using MassTransit;
 using MediatR;
 
 namespace API.Modules.Matches.Features.Commands.UpdateMatch;
@@ -14,8 +15,6 @@ namespace API.Modules.Matches.Features.Commands.UpdateMatch;
 public record UpdateMatchCommand(Guid MatchId, Swipe Swipe) : ICommand<UpdateMatchResult>;
 
 public record UpdateMatchResult(Guid Id);
-
-public record BothSwipedRightDomainEvent(Guid MatchId, Guid ProfileId, Guid MatchedProfileId) : IDomainEvent;
 
 public record UpdateMatchRequestDto(Swipe Swipe);
 
@@ -53,7 +52,8 @@ public class UpdateMatchCommandValidator : AbstractValidator<UpdateMatchCommand>
 internal class UpdateMatchCommandHandler(
     IMatchesRepository matchesRepository,
     IBuddyService buddyService,
-    IUnitOfWork unitOfWork)
+    IUnitOfWork unitOfWork,
+    IPublishEndpoint publishEndpoint)
     : ICommandHandler<UpdateMatchCommand, UpdateMatchResult>
 {
     public async Task<UpdateMatchResult> Handle(UpdateMatchCommand command, CancellationToken cancellationToken)

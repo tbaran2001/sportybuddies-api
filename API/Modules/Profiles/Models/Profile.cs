@@ -53,18 +53,12 @@ public class Profile : Entity
         Gender = gender;
     }
 
-    public void Delete()
-    {
-        //AddDomainEvent(new ProfileDeletedEvent(Id));
-    }
-
     public void AddSport(Sport sport)
     {
         if (Sports.Contains(sport))
             throw new Exception("Profile already has this sport");
 
         Sports.Add(sport);
-        //AddDomainEvent(new ProfileSportAddedEvent(Id, sport.Id));
     }
 
     public void RemoveSport(Sport sport)
@@ -73,7 +67,6 @@ public class Profile : Entity
             throw new Exception("Profile does not have this sport");
 
         Sports.Remove(sport);
-        //AddDomainEvent(new ProfileSportRemovedEvent(Id, sport.Id));
     }
 
     public void UpdatePreferences(Preferences preferences)

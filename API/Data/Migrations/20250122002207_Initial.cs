@@ -276,7 +276,7 @@ namespace API.Data.Migrations
                     ProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     MatchedProfileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ConversationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ConversationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -285,8 +285,7 @@ namespace API.Data.Migrations
                         name: "FK_Buddies_Conversations_ConversationId",
                         column: x => x.ConversationId,
                         principalTable: "Conversations",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Buddies_Profiles_MatchedProfileId",
                         column: x => x.MatchedProfileId,

@@ -28,7 +28,7 @@ namespace API.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid>("ConversationId")
+                    b.Property<Guid?>("ConversationId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("CreatedOn")
@@ -428,9 +428,7 @@ namespace API.Data.Migrations
                 {
                     b.HasOne("API.Modules.Conversations.Models.Conversation", "Conversation")
                         .WithMany()
-                        .HasForeignKey("ConversationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ConversationId");
 
                     b.HasOne("API.Modules.Profiles.Models.Profile", "MatchedProfile")
                         .WithMany()

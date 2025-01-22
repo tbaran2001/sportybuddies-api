@@ -7,13 +7,14 @@ using API.Modules.Sports.Exceptions;
 using Ardalis.GuardClauses;
 using Carter;
 using FluentValidation;
+using MassTransit;
 using MediatR;
 
 namespace API.Modules.Profiles.Features.Commands.AddProfileSport;
 
 public record AddProfileSportCommand(Guid SportId) : ICommand;
 
-public record ProfileSportAddedDomainEvent(Guid ProfileId, IEnumerable<Guid> SportIds) : IDomainEvent;
+public record ProfileSportAddedEvent(Guid ProfileId);
 
 public class AddProfileSportEndpoint : ICarterModule
 {
@@ -49,7 +50,8 @@ internal class AddProfileSportCommandHandler(
     IProfilesRepository profilesRepository,
     ISportsRepository sportsRepository,
     ICurrentUserProvider currentUserProvider,
-    IUnitOfWork unitOfWork) : ICommandHandler<AddProfileSportCommand>
+    IUnitOfWork unitOfWork,
+    IPublishEndpoint publishEndpoint) : ICommandHandler<AddProfileSportCommand>
 {
     public async Task<Unit> Handle(AddProfileSportCommand command, CancellationToken cancellationToken)
     {
@@ -67,6 +69,10 @@ internal class AddProfileSportCommandHandler(
 
         profile.AddSport(sport);
         await unitOfWork.CommitChangesAsync();
+
+        await publishEndpoint.Publish(
+            new ProfileSportAddedEvent(profile.Id),
+            cancellationToken);
 
         return Unit.Value;
     }

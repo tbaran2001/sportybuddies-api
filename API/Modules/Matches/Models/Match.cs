@@ -1,6 +1,5 @@
 ﻿using API.Common.Models;
 using API.Modules.Matches.Enums;
-using API.Modules.Matches.Features.Commands.UpdateMatch;
 using API.Modules.Profiles.Models;
 
 namespace API.Modules.Matches.Models;
@@ -44,11 +43,5 @@ public class Match : Entity
     {
         Swipe = swipe;
         SwipeDateTime = DateTime.UtcNow;
-
-        if (oppositeMatchSwipe != Enums.Swipe.Right)
-            return;
-
-        var domainEvent = new BothSwipedRightDomainEvent(Id, ProfileId, MatchedProfileId);
-        AddDomainEvent(domainEvent);
     }
 }
