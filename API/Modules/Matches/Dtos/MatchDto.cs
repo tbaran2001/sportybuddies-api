@@ -8,5 +8,6 @@ public record MatchDto(
     Guid ProfileId,
     Guid MatchedProfileId,
     DateTime MatchDateTime,
-    Swipe Swipe,
-    DateTime SwipeDateTime);
+    Swipe? Swipe,
+    DateTime? SwipeDateTime,
+    double Distance);

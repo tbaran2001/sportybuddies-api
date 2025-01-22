@@ -1,8 +1,8 @@
 ﻿using API.Common.CQRS;
 using API.Common.Web;
-using API.Data.Repositories.Interfaces;
 using API.Modules.Matches.Dtos;
 using API.Modules.Matches.Exceptions;
+using API.Services.Interfaces;
 using Ardalis.GuardClauses;
 using Carter;
 using Mapster;
@@ -41,7 +41,7 @@ public class GetRandomMatchEndpoint : ICarterModule
 }
 
 internal class GetRandomMatchQueryHandler(
-    IMatchesRepository matchesRepository,
+    IMatchService matchService,
     ICurrentUserProvider currentUserProvider)
     : IQueryHandler<GetRandomMatchQuery, GetRandomMatchResult>
 {
@@ -51,10 +51,10 @@ internal class GetRandomMatchQueryHandler(
 
         var currentUserId = currentUserProvider.GetCurrentUserId();
 
-        var match = await matchesRepository.GetRandomMatchAsync(currentUserId);
-        if (match is null)
+        var matchDto = await matchService.GetRandomMatchAsync(currentUserId);
+        if (matchDto is null)
             throw new RandomMatchNotFoundException();
 
-        return new GetRandomMatchResult(match.Adapt<MatchDto>());
+        return new GetRandomMatchResult(matchDto);
     }
 }

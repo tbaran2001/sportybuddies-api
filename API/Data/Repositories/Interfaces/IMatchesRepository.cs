@@ -12,4 +12,5 @@ public interface IMatchesRepository
     Task RemoveRangeAsync(IEnumerable<Match> matches);
     Task RemoveInvalidMatchesForProfileAsync(Guid profileId);
     Task<bool> CheckIfMatchExistsAsync(Guid profileId, Guid matchedProfileId);
+    Task<IEnumerable<Match>> GetActiveProfileMatchesAsync(Guid profileId);
 }

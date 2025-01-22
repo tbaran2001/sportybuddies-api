@@ -79,4 +79,11 @@ public class MatchesRepository(ApplicationDbContext dbContext) : IMatchesReposit
             .AnyAsync(m => m.ProfileId == profileId && m.MatchedProfileId == matchedProfileId ||
                            m.ProfileId == matchedProfileId && m.MatchedProfileId == profileId);
     }
+
+    public async Task<IEnumerable<Match>> GetActiveProfileMatchesAsync(Guid profileId)
+    {
+        return await dbContext.Matches
+            .Where(m => m.ProfileId == profileId && m.Swipe == null)
+            .ToListAsync();
+    }
 }
