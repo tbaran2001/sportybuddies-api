@@ -43,11 +43,24 @@ builder.Services.AddMassTransit(configuration =>
 
 builder.Services.AddSignalR();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("React",
+        corsPolicyBuilder => corsPolicyBuilder.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
 var app = builder.Build();
 
 app.MapCarter();
 
+app.UseExceptionHandler(_ => { });
+
 app.InitializeDatabaseAsync();
+
+app.UseCors("React");
 
 app.UseSwagger();
 app.UseSwaggerUI();
