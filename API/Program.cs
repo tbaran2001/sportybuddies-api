@@ -1,3 +1,4 @@
+using API.Common.Behaviors;
 using API.Common.Exceptions.Handler;
 using API.Data;
 using API.Extensions;
@@ -18,6 +19,8 @@ builder.Services.AddCarter();
 builder.Services.AddMediatR(serviceConfiguration =>
 {
     serviceConfiguration.RegisterServicesFromAssembly(typeof(Program).Assembly);
+    serviceConfiguration.AddOpenBehavior(typeof(ValidationBehavior<,>));
+    serviceConfiguration.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(Program));
 builder.Services.AddExceptionHandler<CustomExceptionHandler>();
@@ -54,17 +57,17 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseCors("React");
+
 app.MapCarter();
 
 app.UseExceptionHandler(_ => { });
 
 app.InitializeDatabaseAsync();
 
-app.UseCors("React");
 
 app.UseSwagger();
 app.UseSwaggerUI();
-app.UseHttpsRedirection();
 
 app.MapIdentityApi();
 app.MapHub<ChatHub>("chatHub");
