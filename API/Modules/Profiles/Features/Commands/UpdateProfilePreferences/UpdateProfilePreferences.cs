@@ -45,9 +45,11 @@ public class UpdateProfilePreferencesCommandValidator : AbstractValidator<Update
     public UpdateProfilePreferencesCommandValidator()
     {
         RuleFor(x => x.MinAge)
-            .InclusiveBetween(18, 120);
+            .InclusiveBetween(18, 120)
+            .LessThanOrEqualTo(x => x.MaxAge);
         RuleFor(x => x.MaxAge)
-            .InclusiveBetween(18, 120);
+            .InclusiveBetween(18, 120)
+            .GreaterThanOrEqualTo(x => x.MinAge);
         RuleFor(x => x.MaxDistance)
             .InclusiveBetween(1, 100);
         RuleFor(x => x.PreferredGender)
