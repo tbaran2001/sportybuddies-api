@@ -8,7 +8,7 @@ public class Message : Entity
     public Guid ConversationId { get; private set; }
     public Guid SenderId { get; private set; }
     public string Content { get; private set; }
-    public DateTime CreatedOnUtc { get; private set; }
+    public DateTime CreatedOn { get; private set; }
 
     public Conversation Conversation { get; private set; }
     public Profile Sender { get; private set; }
@@ -21,7 +21,7 @@ public class Message : Entity
             ConversationId = conversationId,
             SenderId = senderId,
             Content = content,
-            CreatedOnUtc = DateTime.UtcNow
+            CreatedOn = DateTime.UtcNow
         };
 
         return message;

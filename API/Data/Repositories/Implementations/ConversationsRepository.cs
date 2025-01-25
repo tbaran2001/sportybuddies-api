@@ -37,7 +37,7 @@ public class ConversationsRepository(ApplicationDbContext dbContext) : IConversa
             .Where(c => c.Participants.Any(p => p.ProfileId == profileId))
             .SelectMany(c => c.Messages)
             .GroupBy(m => m.ConversationId)
-            .Select(g => g.OrderByDescending(m => m.CreatedOnUtc).FirstOrDefault())
+            .Select(g => g.OrderByDescending(m => m.CreatedOn).FirstOrDefault())
             .ToListAsync();
     }
 

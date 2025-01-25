@@ -2,8 +2,10 @@ using API.Common.Models;
 using API.Data.Repositories.Interfaces;
 using API.Modules.Matches.Dtos;
 using API.Modules.Matches.Models;
+using API.Modules.Profiles.Dtos;
 using API.Modules.Profiles.Enums;
 using API.Services.Interfaces;
+using Mapster;
 
 namespace API.Services.Implementations;
 
@@ -63,7 +65,7 @@ public class MatchService(
 
         foreach (var match in profileMatchesList)
         {
-            var matchedProfile = await profilesRepository.GetProfileByIdAsync(match.MatchedProfileId);
+            var matchedProfile = await profilesRepository.GetProfileByIdWithSportsAsync(match.MatchedProfileId);
             if (matchedProfile == null)
                 continue;
 
@@ -85,7 +87,7 @@ public class MatchService(
                 Id: match.Id,
                 OppositeMatchId: match.OppositeMatchId,
                 ProfileId: profileId,
-                MatchedProfileId: matchedProfile.Id,
+                MatchedProfile: matchedProfile.Adapt<ProfileDto>(),
                 MatchDateTime: match.MatchDateTime,
                 Swipe: match.Swipe,
                 SwipeDateTime: match.SwipeDateTime,

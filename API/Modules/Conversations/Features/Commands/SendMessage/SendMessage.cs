@@ -34,9 +34,9 @@ public class SendMessageEndpoint : ICarterModule
 
                     var result = await sender.Send(command);
 
-                    var response = result.Message.Adapt<SendMessageResponseDto>();
+                    var response = result.Adapt<SendMessageResponseDto>();
 
-                    return Results.CreatedAtRoute("GetMessageById", new { id = result.Message.Id }, response);
+                    return Results.Ok(response);
                 })
             .RequireAuthorization()
             .WithTags("Conversations")
@@ -79,7 +79,8 @@ internal class SendMessageCommandHandler(
         await unitOfWork.CommitChangesAsync();
 
         await hubContext.Clients.Users(conversation.Participants.Select(p => p.ProfileId.ToString()))
-            .ReceiveMessage(new HubMessage(conversation.Id, message.SenderId, message.Content, message.CreatedOnUtc,
+            .ReceiveMessage(new HubMessage(message.Id, conversation.Id, message.SenderId, message.Content,
+                message.CreatedOn,
                 conversation.Participants.Select(p => p.ProfileId).ToList()));
 
         var messageDto = message.Adapt<MessageDto>();

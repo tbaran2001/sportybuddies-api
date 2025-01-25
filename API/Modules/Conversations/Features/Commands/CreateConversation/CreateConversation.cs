@@ -29,9 +29,10 @@ public class CreateConversationEndpoint : ICarterModule
 
                 var result = await sender.Send(command);
 
-                var response = result.Conversation.Adapt<CreateConversationResponseDto>();
+                var response = result.Adapt<CreateConversationResponseDto>();
 
-                return Results.CreatedAtRoute("GetConversationById", new { id = response.Conversation.Id }, response);
+                return Results.CreatedAtRoute("GetConversationById", new { conversationId = response.Conversation.Id },
+                    response);
             })
             .RequireAuthorization()
             .WithTags("Conversations")

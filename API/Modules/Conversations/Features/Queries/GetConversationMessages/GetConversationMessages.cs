@@ -27,7 +27,7 @@ public class GetConversationMessagesEndpoint : ICarterModule
 
                     var result = await sender.Send(query);
 
-                    var response = result.Messages.Adapt<GetConversationMessagesResponseDto>();
+                    var response = result.Adapt<GetConversationMessagesResponseDto>();
 
                     return Results.Ok(response);
                 })
