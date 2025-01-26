@@ -16,17 +16,17 @@ public record UploadProfilePhotoCommand(Stream File, string FileName) : ICommand
 
 public record UploadProfilePhotoResult(string PhotoUrl);
 
-public record UploadProfilePhotoRequestDto(Stream File, string FileName);
-
 public record UploadProfilePhotoResponseDto(string PhotoUrl);
 
 public class UploadProfilePhotoEndpoint : ICarterModule
 {
     public void AddRoutes(IEndpointRouteBuilder app)
     {
-        app.MapPost("api/profiles/me/photo", async (UploadProfilePhotoRequestDto request, ISender sender) =>
+        app.MapPost("api/profiles/upload-profile-photo", async (IFormFile file, ISender sender) =>
             {
-                var command = request.Adapt<UploadProfilePhotoCommand>();
+                await using var stream = file.OpenReadStream();
+
+                var command = new UploadProfilePhotoCommand(stream, file.FileName);
 
                 var result = await sender.Send(command);
 
@@ -40,7 +40,8 @@ public class UploadProfilePhotoEndpoint : ICarterModule
             .Produces(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
             .WithSummary("Upload a profile photo")
-            .WithDescription("Upload a photo for the profile of the current user");
+            .WithDescription("Upload a photo for the profile of the current user")
+            .DisableAntiforgery();
     }
 }
 

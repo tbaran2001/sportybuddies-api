@@ -46,7 +46,6 @@ public class MatchService(
 
     public async Task<MatchDto> GetRandomMatchAsync(Guid profileId)
     {
-        // Fetch the profile and its preferences
         var profile = await profilesRepository.GetProfileByIdAsync(profileId);
         if (profile == null)
             throw new ArgumentException("Profile not found.", nameof(profileId));

@@ -9,7 +9,7 @@ public record ProfileDto(
     string Name,
     string Description,
     string MainPhotoUrl,
-    DateTime CreatedOnUtc,
+    DateTime CreatedOn,
     Gender Gender,
     DateOnly DateOfBirth,
     Preferences Preferences,
