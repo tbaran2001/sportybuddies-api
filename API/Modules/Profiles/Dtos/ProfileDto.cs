@@ -13,4 +13,5 @@ public record ProfileDto(
     Gender Gender,
     DateOnly DateOfBirth,
     Preferences Preferences,
+    Location Location,
     List<SportDto> Sports);

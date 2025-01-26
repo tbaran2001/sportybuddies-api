@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250122002207_Initial")]
+    [Migration("20250125222301_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -88,7 +88,7 @@ namespace API.Data.Migrations
                     b.Property<Guid>("ConversationId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<DateTime>("CreatedOnUtc")
+                    b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<Guid>("SenderId")
@@ -526,6 +526,9 @@ namespace API.Data.Migrations
                         {
                             b1.Property<Guid>("ProfileId")
                                 .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Address")
+                                .HasColumnType("nvarchar(max)");
 
                             b1.Property<double>("Latitude")
                                 .HasColumnType("float");

@@ -9,7 +9,7 @@ public record Preferences
     public int MaxDistance { get; }
     public Gender PreferredGender { get; }
 
-    public static Preferences Default => new Preferences(18, 45, 50, 0);
+    public static Preferences Default => new Preferences(18, 45, 50, Gender.Unknown);
 
     private Preferences(int minAge, int maxAge, int maxDistance, Gender preferredGender)
     {
@@ -35,6 +35,5 @@ public record Preferences
 
     private Preferences()
     {
-
     }
 }

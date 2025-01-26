@@ -69,7 +69,8 @@ namespace API.Data.Migrations
                     Preferences_MaxDistance = table.Column<int>(type: "int", nullable: true),
                     Preferences_PreferredGender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Location_Latitude = table.Column<double>(type: "float", nullable: true),
-                    Location_Longitude = table.Column<double>(type: "float", nullable: true)
+                    Location_Longitude = table.Column<double>(type: "float", nullable: true),
+                    Location_Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -308,7 +309,7 @@ namespace API.Data.Migrations
                     ConversationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     SenderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Content = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedOnUtc = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {

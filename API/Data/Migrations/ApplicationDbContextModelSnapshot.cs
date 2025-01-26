@@ -524,6 +524,9 @@ namespace API.Data.Migrations
                             b1.Property<Guid>("ProfileId")
                                 .HasColumnType("uniqueidentifier");
 
+                            b1.Property<string>("Address")
+                                .HasColumnType("nvarchar(max)");
+
                             b1.Property<double>("Latitude")
                                 .HasColumnType("float");
 

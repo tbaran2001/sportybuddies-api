@@ -8,4 +8,4 @@ public record BuddyDto(
     Guid ProfileId,
     ProfileDto MatchedProfile,
     DateTime CreatedOn,
-    Guid ConversationId);
+    Guid? ConversationId);

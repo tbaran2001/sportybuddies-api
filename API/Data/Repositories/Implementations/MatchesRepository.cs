@@ -58,17 +58,22 @@ public class MatchesRepository(ApplicationDbContext dbContext) : IMatchesReposit
     public async Task RemoveInvalidMatchesForProfileAsync(Guid profileId)
     {
         await dbContext.Matches
-            .Where(m => (m.ProfileId == profileId || m.MatchedProfileId == profileId) &&
-                        !dbContext.Profiles
-                            .Where(u => u.Id == m.ProfileId)
-                            .SelectMany(u => u.Sports)
-                            .Select(s => s.Id)
-                            .Intersect(
-                                dbContext.Profiles
-                                    .Where(u => u.Id == m.MatchedProfileId)
-                                    .SelectMany(u => u.Sports)
-                                    .Select(s => s.Id)
-                            ).Any()
+            .Where(m =>
+                    (m.ProfileId == profileId || m.MatchedProfileId == profileId) &&
+                    m.Swipe == null && // Current match has no swipe
+                    dbContext.Matches
+                        .Where(opposite => opposite.Id == m.OppositeMatchId) // Find the opposite match
+                        .All(opposite => opposite.Swipe == null) && // Opposite match also has no swipe
+                    !dbContext.Profiles
+                        .Where(u => u.Id == m.ProfileId)
+                        .SelectMany(u => u.Sports)
+                        .Select(s => s.Id)
+                        .Intersect(
+                            dbContext.Profiles
+                                .Where(u => u.Id == m.MatchedProfileId)
+                                .SelectMany(u => u.Sports)
+                                .Select(s => s.Id)
+                        ).Any() // No shared sports
             )
             .ExecuteDeleteAsync();
     }

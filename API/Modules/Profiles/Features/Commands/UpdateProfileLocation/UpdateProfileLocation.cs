@@ -12,9 +12,9 @@ using MediatR;
 
 namespace API.Modules.Profiles.Features.Commands.UpdateProfileLocation;
 
-public record UpdateProfileLocationCommand(double Latitude, double Longitude) : ICommand;
+public record UpdateProfileLocationCommand(double Latitude, double Longitude, string Address) : ICommand;
 
-public record UpdateProfileLocationRequestDto(double Latitude, double Longitude);
+public record UpdateProfileLocationRequestDto(double Latitude, double Longitude, string Address);
 
 public class UpdateProfileLocationEndpoint : ICarterModule
 {
@@ -64,7 +64,9 @@ internal class UpdateProfileLocationCommandHandler(
         if (profile == null)
             throw new ProfileNotFoundException(currentUserId);
 
-        profile.UpdateLocation(Location.Create(command.Latitude, command.Longitude));
+        var location = Location.Create(command.Latitude, command.Longitude, command.Address);
+
+        profile.UpdateLocation(location);
         await unitOfWork.CommitChangesAsync();
 
         return Unit.Value;

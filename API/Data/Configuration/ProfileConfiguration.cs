@@ -40,6 +40,7 @@ public class ProfileConfiguration : IEntityTypeConfiguration<Profile>
         {
             locationBuilder.Property(l => l.Latitude);
             locationBuilder.Property(l => l.Longitude);
+            locationBuilder.Property(l => l.Address);
         });
 
         /*builder

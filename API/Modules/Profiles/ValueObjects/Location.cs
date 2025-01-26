@@ -4,14 +4,16 @@ public record Location
 {
     public double Latitude { get; }
     public double Longitude { get; }
+    public string Address { get; }
 
-    private Location(double latitude, double longitude)
+    private Location(double latitude, double longitude, string address)
     {
         Latitude = latitude;
         Longitude = longitude;
+        Address = address;
     }
 
-    public static Location Create(double latitude, double longitude)
+    public static Location Create(double latitude, double longitude, string address)
     {
         if (latitude < -90 || latitude > 90)
             throw new ArgumentException("Latitude must be in range from -90 to 90");
@@ -19,7 +21,7 @@ public record Location
         if (longitude < -180 || longitude > 180)
             throw new ArgumentException("Longitude must be in range from -180 to 180");
 
-        return new Location(latitude, longitude);
+        return new Location(latitude, longitude, address);
     }
 
     public double CalculateDistance(Location other)
@@ -43,6 +45,5 @@ public record Location
 
     private Location()
     {
-
     }
 }
