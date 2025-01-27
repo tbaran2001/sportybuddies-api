@@ -1,5 +1,4 @@
 ﻿using API.Common.CQRS;
-using API.Common.Models;
 using API.Data.Repositories.Interfaces;
 using API.Modules.Sports.Exceptions;
 using API.Modules.Sports.Models;
@@ -14,8 +13,6 @@ namespace API.Modules.Sports.Features.CreateSport;
 public record CreateSportCommand(string Name, string Description) : ICommand<CreateSportResult>;
 
 public record CreateSportResult(Guid Id);
-
-public record SportCreatedDomainEvent(Guid Id, string Name, string Description) : IDomainEvent;
 
 public record CreateSportRequestDto(string Name, string Description);
 

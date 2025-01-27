@@ -15,8 +15,6 @@ public record CreateProfileCommand(Guid ProfileId, string Name, DateOnly DateOfB
 
 public record CreateProfileResult(ProfileDto Profile);
 
-public record ProfileCreatedDomainEvent(Guid ProfileId) : IDomainEvent;
-
 public class CreateProfileCommandValidator : AbstractValidator<CreateProfileCommand>
 {
     public CreateProfileCommandValidator()

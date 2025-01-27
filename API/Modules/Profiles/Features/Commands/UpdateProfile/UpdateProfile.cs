@@ -17,8 +17,6 @@ public record UpdateProfileCommand(string Name, string Description, Gender Gende
 
 public record UpdateProfileResult(Guid Id);
 
-public record ProfileUpdatedDomainEvent(Guid ProfileId) : IDomainEvent;
-
 public record UpdateProfileRequestDto(string Name, string Description, Gender Gender, DateOnly DateOfBirth);
 
 public class UpdateProfileEndpoint : ICarterModule
