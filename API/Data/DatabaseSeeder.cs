@@ -28,9 +28,17 @@ public static class DatabaseSeeder
 
     private static IEnumerable<Sport> GetInitialSports() => new List<Sport>
     {
-        Sport.Create("Football", "Football description"),
-        Sport.Create("Basketball", "Basketball description"),
-        Sport.Create("Tennis", "Tennis description"),
-        Sport.Create("Volleyball", "Volleyball description")
+        Sport.Create("Gym", "Gym"),
+        Sport.Create("Boxing", "Boxing"),
+        Sport.Create("Surfing", "Surfing"),
+        Sport.Create("Basketball", "Basketball"),
+        Sport.Create("Snowboarding", "Snowboarding"),
+        Sport.Create("Hiking", "Hiking"),
+        Sport.Create("Yoga", "Yoga"),
+        Sport.Create("Cycling", "Cycling"),
+        Sport.Create("Swimming", "Swimming"),
+        Sport.Create("Tennis", "Tennis"),
+        Sport.Create("Running", "Running"),
+        Sport.Create("Skiing", "Skiing"),
     };
 }
